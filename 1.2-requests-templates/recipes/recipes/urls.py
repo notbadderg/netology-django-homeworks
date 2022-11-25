@@ -16,6 +16,9 @@ Including another URLconf
 
 from django.urls import path
 
+from calculator.views import home, calculator
+
 urlpatterns = [
-    # здесь зарегистрируйте вашу view-функцию
+    path('', home, name='home'),
+    path('<dish>', calculator, name='calculator')
 ]
