@@ -19,7 +19,6 @@ def show_catalog(request):
         order_by = '-price'
     else:
         order_by = 'id'
-
     phones = Phone.objects.all().order_by(order_by)
 
     context = {
