@@ -7,25 +7,18 @@ from .models import Article, Scope, Tag
 
 class ArticleInlineFormset(BaseInlineFormSet):
     def clean(self):
-        is_main_scope_selected = False
-        is_deleting_main_scope = False
+        quantity_of_main_scopes = 0
         for form in self.forms:
             data = form.cleaned_data
             print(data)
             if data.get('is_main'):
-                if is_main_scope_selected:
-                    raise ValidationError('Основным может быть только один раздел')
-                else:
-                    is_main_scope_selected = True
+                quantity_of_main_scopes += 1
                 if data.get('DELETE'):
-                    is_main_scope_selected = False
-                    is_deleting_main_scope = True
-                else:
-                    is_deleting_main_scope = False
-        if is_deleting_main_scope:
-            raise ValidationError('Удаление основного раздела, при удалении укажите сразу другой основной раздел')
-        if not is_main_scope_selected:
-            raise ValidationError('Укажите основной раздел')
+                    quantity_of_main_scopes -= 1
+
+        if quantity_of_main_scopes != 1:
+            raise ValidationError('После сохранения должен остаться только 1 основной раздел')
+
         return super().clean()
 
 
