@@ -25,6 +25,7 @@ class Tag(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['name'], name='unique_tag')
         ]
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -32,7 +33,7 @@ class Tag(models.Model):
 
 class Scope(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='scopes')
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, verbose_name='Раздел')
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='tags', verbose_name='Раздел')
     is_main = models.BooleanField(verbose_name='Основной')
 
     class Meta:
@@ -45,3 +46,4 @@ class Scope(models.Model):
             models.UniqueConstraint(fields=['article', 'is_main'], condition=Q(is_main=True),
                                     name='only_one_main_tag_for_article')
         ]
+        ordering = ['-is_main', 'tag__name']
