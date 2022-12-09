@@ -7,7 +7,6 @@ def articles_list(request):
     template = 'articles/news.html'
     ordering = '-published_at'
     articles = Article.objects.all().order_by(ordering)
-
     context = {
         'articles': articles
     }
