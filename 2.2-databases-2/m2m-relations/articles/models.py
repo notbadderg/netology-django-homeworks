@@ -17,22 +17,22 @@ class Article(models.Model):
 
 
 class Tag(models.Model):
-    title = models.CharField(max_length=100, verbose_name='Название')
+    name = models.CharField(max_length=100, verbose_name='Название')
 
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
         constraints = [
-            models.UniqueConstraint(fields=['title'], name='unique_tag')
+            models.UniqueConstraint(fields=['name'], name='unique_tag')
         ]
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 class Scope(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='articles')
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='scopes', verbose_name='Раздел')
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='scopes')
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, verbose_name='Раздел')
     is_main = models.BooleanField(verbose_name='Основной')
 
     class Meta:
