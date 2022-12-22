@@ -43,7 +43,8 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
         # checking if user has no more than 10 opened ads
         user_id = self.context["request"].user.id
-        if Advertisement.objects.filter(creator__id=user_id, status='OPEN').count() >= 10:
-            raise ValidationError('exceeded max opened advs')
+        user_open_ads_count = Advertisement.objects.filter(creator=user_id, status='OPEN').count()
+        if user_open_ads_count >= 10 and (data.get('status') == 'OPEN' or self.context["request"].method == 'POST'):
+            raise ValidationError('Exceeded max opened advs')
 
         return data
